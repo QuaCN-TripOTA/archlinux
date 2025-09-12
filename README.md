@@ -1,5 +1,6 @@
 1. Install licons or quacn
 + bash ./arch-licons.sh
++ or
 + bash ./arch-quacn.sh
 
 2. Install packages
