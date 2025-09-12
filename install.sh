@@ -2,6 +2,8 @@
 
 set -e
 
+usermod -aG docker licons
+
 # Cập nhật hệ thống
 yay -Syu --noconfirm
 
@@ -18,7 +20,8 @@ yay -S --noconfirm \
   rider \
   dbeaver \
   postman-bin \
-  appimagelauncher
+  appimagelauncher \
+  rclone
 
 echo "==> Cấu hình fcitx5 trong ~/.xprofile"
 

@@ -1,52 +1,45 @@
 #!/bin/bash
 set -e
 
-# Thiết lập timezone
 echo "==> Thiết lập timezone"
 ln -sf /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
 timedatectl set-timezone Asia/Ho_Chi_Minh
 timedatectl set-ntp true
 
-# Cấu hình locale
 echo "==> Cấu hình locale"
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
-# Hostname
 echo "==> Hostname"
 echo "seiza" > /etc/hostname
 if ! grep -q "127.0.0.1 seiza.localdomain seiza" /etc/hosts; then
     echo "127.0.0.1 seiza.localdomain seiza" >> /etc/hosts
 fi
 
-# Thiết lập mật khẩu root
 echo "==> Đặt mật khẩu root"
 passwd
 
-# Tạo user mới
 useradd -mG wheel licons
 echo "==> Đặt mật khẩu cho user: licons"
 passwd licons
 
-# Sudoers
 echo "==> Mở file sudoers để bỏ comment các dòng liên quan đến wheel"
 EDITOR=nano visudo
 
-# Pacman multilib
 echo "==> Mở /etc/pacman.conf để bỏ comment [multilib] và Include"
 nano /etc/pacman.conf
 
 # Update pacman
 pacman -Syu --noconfirm pacman
 
-# mkinitcpio chỉnh preset
-echo "==> Mở /etc/mkinitcpio.d/linux.preset và chỉnh PRESETS=('default'), comment fallback"
+echo "==> Mở /etc/mkinitcpio.d/linux.preset"
+echo "===> Chỉnh PRESETS=('default')"
+echo "===> #fallback"
 nano /etc/mkinitcpio.d/linux.preset
 rm -f /boot/initramfs-linux-fallback.img
 mkinitcpio -P
 
-# Cài grub EFI
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 
 # Cài theme cho grub
@@ -72,8 +65,7 @@ echo "==> Hoàn tất cấu hình cơ bản!"
 
 
 echo "==> Cài driver NVIDIA"
-pacman -S --noconfirm \
-    nvidia nvidia-utils nvidia-settings
+pacman -S --noconfirm nvidia nvidia-utils nvidia-settings
 
 echo "options nvidia-drm modeset=1" > /etc/modprobe.d/nvidia.conf
 echo "blacklist nouveau" > /etc/modprobe.d/blacklist-nouveau.conf
@@ -110,7 +102,5 @@ systemctl enable bluetooth
 systemctl enable ufw
 systemctl enable systemd-timesyncd
 systemctl enable docker
-
-usermod -aG docker licons
 
 echo "==> Hoàn tất cài đặt!"

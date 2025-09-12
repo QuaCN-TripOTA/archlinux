@@ -2,7 +2,11 @@
 
 set -e
 
-sudo cp -fr ./themes/ /usr/share/themes/
-sudo cp -fr ./cursors/ /usr/share/icons/
+sudo cp -fr ./themes /usr/share/themes/
+sudo cp -fr ./cursors /usr/share/icons/
+sudo cp -fr ./fish ~/.config/
 
-echo "Hoàn tất cài đặt!"
+sudo cp -f ./.face ~/
+sudo cp -f ./.xprofile ~/
+
+echo "Hoàn tất copy!"
